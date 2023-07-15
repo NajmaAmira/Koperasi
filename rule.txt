@@ -1,0 +1,24 @@
+detail yg sekiranya kurang:
+
+- tambahin menu "Laporan Transaksi" dan "Laporan Keuangan" di Menu Utama.
+- Simpanan pokok 50.000 otomatis masuk ke saldo anggota saat anggota mendaftar (menu Tambah Anggota).
+- Saat masuk menu transaksi, user hrs mengisi nama dan password, sehingga aktivitas2 transaksi selanjutnya akan tersimpan atas nama anggota tsb. saat anggota tsb kembali ke menu utama dan masuk lagi ke menu Transaksi, saldonya akan terus berlanjut dr transaksi miliknya sblmnya (tidak mulai dari 0 lagi).
+- Simpanan wajib
+
+dibayar masing2 anggota setiap bulan.
+- Simpanan sukarela
+
+dibayar masing2 anggota secara bebas.
+- Pinjaman
+
+diambil dari dana yg bersumber dari setoran simpanan pokok, wajib, dan sukarela seluruh anggota. jadi, dana yang dipinjam tdk bisa lebih dari dana yg tersedia di koperasi pd saat itu.
+- Pengembalian
+
+user tidak perlu mengisikan jumlah pengembalian tiap mengangsur karena besaran dana yg tersetor sudah otomatis diset ((pinjam+bunga)/4). saat pengembalian sdh lunas dan user menekan menu Pengembalian, maka akan muncul teks "Tidak ada pengembalian/Lunas".
+- Simpanan pokok dan simpanan wajib tidak bisa ditarik.
+- Simpanan sukarela bisa ditarik. Jika simpanan sukarela 0 atau krg dari yang ingin ditarik, maka akan muncul teks "Saldo Anda kurang"
+
+- setiap menambah anggota, datanya akan tersimpan di database_anggota.txt
+- setiap anggota melakukan transaksi, datanya akan tersimpan di database_transaksi.txt
+- data saldo setiap anggota akan tersimpan di saldo.txt
+- data akumulasi dana pada koperasi tsb akan tersimpan di saldo_koperasi.txt

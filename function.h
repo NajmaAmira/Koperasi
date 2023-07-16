@@ -4,6 +4,7 @@
 #include <string>
 #include "anggota.h"
 #include "transaksi.h"
+
 using namespace std;
 
 time_t now = time(0);
@@ -37,7 +38,7 @@ bool dateValidation(int ddInput, int mmInput, int yyInput){
 	if ((mmInput == 4) || (mmInput == 6) || (mmInput == 9) || (mmInput == 11)){
 		return (ddInput <= 30);
 	}
-
+	
 	return true;
 }
 
@@ -49,13 +50,13 @@ void saveAnggotaToDatabase(vector<Anggota>& anggotaVector) {
 
         int id = 1;
         for (int i = 0; i < anggotaVector.size(); i++) {
-            databaseFile << id << " "
+            databaseFile << id << " " 
                          << "\"" << anggotaVector[i].getNama() << "\"" << " "  // Menggunakan tanda kutip ("") untuk mengelompokkan nama
-                         << anggotaVector[i].getNik() << " "
-                         << anggotaVector[i].getPassword() << " "
-                         << anggotaVector[i].getTanggal() << " "
-                         << anggotaVector[i].getBulan() << " "
-                         << anggotaVector[i].getTahun() << " "
+                         << anggotaVector[i].getNik() << " " 
+                         << anggotaVector[i].getPassword() << " " 
+                         << anggotaVector[i].getTanggal() << " " 
+                         << anggotaVector[i].getBulan() << " " 
+                         << anggotaVector[i].getTahun() << " " 
                          << anggotaVector[i].getSaldo() << endl;
             id++;
         }
@@ -86,12 +87,7 @@ void loadAnggotaFromDatabase(vector<Anggota>& anggotaVector) {
         int id, tanggal, bulan, tahun, saldo, bulan_transaksi, saldo_dipinjam;
         string nama, nik, password;
 
-        // Variabel sementara untuk membaca spasi dalam nama anggota
-        string temp;
-
-        while (databaseFile >> id) {
-            // Menghapus spasi kosong setelah ID
-            databaseFile.get();
+        while (true) {
 
             // Membaca nama anggota dengan spasi
             getline(databaseFile, nama, '\"');
@@ -99,6 +95,13 @@ void loadAnggotaFromDatabase(vector<Anggota>& anggotaVector) {
 
             databaseFile >> nik >> password >> tanggal >> bulan >> tahun >> saldo >> saldo_dipinjam;
             anggotaVector.emplace_back(nama, nik, password, tanggal, bulan, tahun, saldo, saldo_dipinjam);
+
+            if(databaseFile.eof()) {
+                break;
+            } else {
+                // Enter ke baris selanjutnya
+                databaseFile.get();
+            }
         }
         databaseFile.close();
         cout << "Data anggota berhasil diambil dari database." << endl;
@@ -124,7 +127,7 @@ void displayAnggota(vector<Anggota>& anggotaVector) {
 }
 
 void saveLaporanTransaksiToDatabase(vector<Transaksi>& transaksiVector) {
-    ofstream databaseFile(pathDatabaseTransaksi);
+    ofstream databaseFile(pathDatabaseTransaksi);  
 
     if (databaseFile.is_open()) {
         // Menambahkan baris kosong sebagai pemisah antara anggota yang ada dengan anggota baru
@@ -132,12 +135,12 @@ void saveLaporanTransaksiToDatabase(vector<Transaksi>& transaksiVector) {
 
         int id = 1;
         for (int i = 0; i < transaksiVector.size(); i++) {
-            databaseFile << id << " "
+            databaseFile << id << " " 
                          << "\"" << transaksiVector[i].getJenisTransaksi() << "\"" << " "  // Menggunakan tanda kutip ("") untuk mengelompokkan nama
-                         << transaksiVector[i].getNik() << " "
-                         << transaksiVector[i].getTanggal() << " "
-                         << transaksiVector[i].getBulan() << " "
-                         << transaksiVector[i].getTahun() << " "
+                         << transaksiVector[i].getNik() << " " 
+                         << transaksiVector[i].getTanggal() << " " 
+                         << transaksiVector[i].getBulan() << " " 
+                         << transaksiVector[i].getTahun() << " " 
                          << transaksiVector[i].getNominal() << endl;
             id++;
         }
@@ -155,19 +158,20 @@ void loadLaporanTransaksiFromDatabase(vector<Transaksi>& transaksiVector) {
         int id, tanggal, bulan, tahun, nominal;
         string jenis_transaksi, nik;
 
-        // Variabel sementara untuk membaca spasi dalam nama anggota
-        string temp;
-
-        while (databaseFile >> id) {
-            // Menghapus spasi kosong setelah ID
-            databaseFile.get();
-
+        while (true) {
             // Membaca nama anggota dengan spasi
             getline(databaseFile, jenis_transaksi, '\"');
             getline(databaseFile, jenis_transaksi, '\"');
 
             databaseFile >> nik >> tanggal >> bulan >> tahun >> nominal;
             transaksiVector.emplace_back(jenis_transaksi, nik, tanggal, bulan, tahun, nominal);
+
+            if(databaseFile.eof()) {
+                break;
+            } else {
+                // Enter ke baris selanjutnya
+                databaseFile.get();
+            }
         }
         databaseFile.close();
         cout << "Data transaksi berhasil diambil dari database." << endl;
@@ -187,5 +191,5 @@ void displayTransaksi(vector<Transaksi>& transaksiVector){
         id++;
         cout << endl;
     }
-
+    
 }

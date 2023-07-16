@@ -32,7 +32,7 @@ class Anggota{
 
         // NIK
         string getNik(){
-            return this->nama;
+            return this->nik;
         };
         void setNik(string nik){
             this->nik = nik;

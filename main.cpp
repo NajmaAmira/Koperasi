@@ -27,19 +27,17 @@ int main()
         bulan,
         tahun,
         saldo,
-        saldo_koperasi = 0,
+        saldo_koperasi = 500000,
         simpanan_wajib = 0,
         simpanan_sukarela = 0,
         pinjaman = 0,
         pengembalian_pinjaman = 0,
         shu = 0,
         saldo_pinjam = 0,
-        bunga = 0.1 * saldo_pinjam,
-        bulan_transaksi;
+        bunga = 0.1 * saldo_pinjam, 
+        bulan_transaksi = 0;
 
-
-
-    while (1)
+    while (true)
     {
         system("cls || clear");
         loadAnggotaFromDatabase(recAnggota);
@@ -58,125 +56,131 @@ int main()
         switch (pilihan)
         {
         case 1:
-            system("cls || clear");
-            cout << "1. Tambah Anggota" << endl;
-            cout << "2. Cari Anggota" << endl;
-            cout << "3. Tampilkan Anggota" << endl;
-            cout << "4. Hapus Anggota" << endl;
-            cout << "5. Kembali" << endl;
-            cout << "Masukkan pilihan anda: ";
-            cin >> pilihan;
-
-            switch (pilihan)
+            while (true)
             {
-            case 1:
-                while (true)
+                system("cls || clear");
+                cout << "1. Tambah Anggota" << endl;
+                cout << "2. Cari Anggota" << endl;
+                cout << "3. Tampilkan Anggota" << endl;
+                cout << "4. Hapus Anggota" << endl;
+                cout << "5. Kembali" << endl;
+                cout << "Masukkan pilihan anda: ";
+                cin >> pilihan;
+
+                switch (pilihan)
                 {
-                    system("cls || clear");
-                    cout << "Masukkan nama anda: ";
-                    getline(cin >> ws, nama);
-                    cout << endl;
-                    cout << "Masukkan NIK anda: ";
-                    cin >> nik;
-                    cout << endl;
-                    cout << "Masukkan password anda: ";
-                    cin >> password;
-                    cout << endl;
+                case 1:
+
                     while (true)
                     {
-                        cout << "Masukkan tanggal/bulan/tahun lahir anda (dd mm yyyy): ";
-                        cin >> tanggal >> bulan >> tahun;
+                        system("cls || clear");
+                        cout << "Masukkan nama anda: ";
+                        getline(cin >> ws, nama);
                         cout << endl;
-                        if (dateValidation(tanggal, bulan, tahun))
+                        cout << "Masukkan NIK anda: ";
+                        cin >> nik;
+                        cout << endl;
+                        cout << "Masukkan password anda: ";
+                        cin >> password;
+                        cout << endl;
+                        while (true)
                         {
+                            cout << "Masukkan tanggal/bulan/tahun lahir anda (dd mm yyyy): ";
+                            cin >> tanggal >> bulan >> tahun;
+                            cout << endl;
+                            if (dateValidation(tanggal, bulan, tahun))
+                            {
+                                break;
+                            }
+                            else
+                            {
+                                cout << "Tanggal yang anda masukkan tidak valid" << endl;
+                                continue;
+                            }
+                        }
+
+                        Anggota anggota(nama, nik, password, tanggal, bulan, tahun, saldo, saldo_dipinjam);
+                        recAnggota.push_back(anggota);
+
+                        saveAnggotaToDatabase(recAnggota);
+                        cout << "Anggota berhasil ditambahkan" << endl;
+
+                        cout << "Apakah anda ingin menambahkan anggota lagi? (y/n) ";
+                        char pilihan;
+                        cin >> pilihan;
+                        if (pilihan == 'y')
+                        {
+                            continue;
+                        }
+                        else
+                        {
+                            break;
+                        }
+                    }
+                    
+                    break;
+                case 2:
+                    cout << "Masukkan NIK anggota yang ingin dicari: ";
+                    cin >> nik;
+                    cout << endl;
+                    if (searchAnggotaByNIK(recAnggota, nik))
+                    {
+                        cout << "Press enter to continue...";
+                        cin.ignore();
+                        cin.get();
+                    }
+                    else
+                    {
+                        cout << "Anggota tidak ditemukan" << endl;
+                        cout << "Press enter to continue...";
+                        cin.ignore();
+                        cin.get();
+                    }
+                    break;
+                case 3:
+                    displayAnggota(recAnggota);
+                    // cek jika anggota kosong
+                    if (recAnggota.size() == 0)
+                    {
+                        cout << "Belum ada anggota" << endl;
+                    }
+                    cout << "Press enter to continue...";
+                    cin.ignore();
+                    cin.get();
+                    break;
+                case 4:
+                    cout << "Masukkan NIK anggota yang ingin dihapus: ";
+                    cin >> nik;
+                    cout << endl;
+                    for (int i = 0; i < recAnggota.size(); i++)
+                    {
+                        if (recAnggota[i].getNik() == nik)
+                        {
+                            deleteAnggotaFromDatabase(recAnggota, nik);
+                            cout << "Anggota berhasil dihapus" << endl;
+                            cout << "Press enter to continue...";
+                            cin.ignore();
+                            cin.get();
                             break;
                         }
                         else
                         {
-                            cout << "Tanggal yang anda masukkan tidak valid" << endl;
-                            continue;
+                            cout << "Anggota tidak ditemukan" << endl;
+                            cout << "Press enter to continue...";
+                            cin.ignore();
+                            cin.get();
+                            break;
                         }
                     }
-
-                    Anggota anggota(nama, nik, password, tanggal, bulan, tahun, saldo, saldo_dipinjam);
-                    recAnggota.push_back(anggota);
-
-                    system("cls || clear");
-                    cout << "Anggota berhasil ditambahkan" << endl;
-
-                    cout << "Apakah anda ingin menambahkan anggota lagi? (y/n) ";
-                    char pilihan;
-                    cin >> pilihan;
-                    if (pilihan == 'y')
-                    {
-                        continue;
-                    }
-                    else
-                    {
-                        break;
-                    }
+                    break;
+                case 5:
+                    break;
+                default:
+                    switchErrorHandler();
+                    break;
                 }
-                saveAnggotaToDatabase(recAnggota);
-                break;
-            case 2:
-                cout << "Masukkan NIK anggota yang ingin dicari: ";
-                cin >> nik;
-                cout << endl;
-                for (int i = 0; i < recAnggota.size(); i++)
-                {
-                    if (recAnggota[i].getNik() == nik)
-                    {
-                        cout << "Nama                       : " << recAnggota[i].getNama() << endl;
-                        cout << "NIK                        : " << recAnggota[i].getNik() << endl;
-                        cout << "Password                   : " << recAnggota[i].getPassword() << endl;
-                        cout << "Tanggal Lahir              : " << recAnggota[i].getTanggal() << "/" << recAnggota[i].getBulan() << "/" << recAnggota[i].getTahun() << endl;
-                        cout << "Saldo                      : " << recAnggota[i].getSaldo() << endl;
-                        break;
-                    }
-                    else
-                    {
-                        cout << "Anggota tidak ditemukan" << endl;
-                        break;
-                    }
-                }
-                break;
-            case 3:
-                displayAnggota(recAnggota);
-                // cek jika anggota kosong
-                if (recAnggota.size() == 0)
-                {
-                    cout << "Belum ada anggota" << endl;
-                }
-                cout << "Press enter to continue...";
-                cin.ignore();
-                cin.get();
-                break;
-            case 4:
-                cout << "Masukkan NIK anggota yang ingin dihapus: ";
-                cin >> nik;
-                cout << endl;
-                for (int i = 0; i < recAnggota.size(); i++)
-                {
-                    if (recAnggota[i].getNik() == nik)
-                    {
-                        recAnggota.erase(recAnggota.begin() + i);
-                        cout << "Anggota berhasil dihapus" << endl;
-                        break;
-                    }
-                    else
-                    {
-                        cout << "Anggota tidak ditemukan" << endl;
-                        break;
-                    }
-                }
-                saveAnggotaToDatabase(recAnggota);
-                break;
-            case 5:
-                break;
-            default:
                 break;
             }
-
             break;
         case 2:
             system("cls || clear");
@@ -190,14 +194,8 @@ int main()
 
             while (true)
             {
-                cout << "Masukkan tanggal pembayaran (Angka): ";
-                cin >> tanggal;
-                cout << endl;
-                cout << "Masukkan bulan pembayaran (Angka): ";
-                cin >> bulan;
-                cout << endl;
-                cout << "Masukkan tahun pembayaran (Angka): ";
-                cin >> tahun;
+                cout << "Masukkan tanggal / bulan / tahun pembayaran (dd mm yyyy): ";
+                cin >> tanggal >> bulan >> tahun;
                 cout << endl;
                 if (dateValidation(tanggal, bulan, tahun))
                 {
@@ -206,12 +204,12 @@ int main()
                 else
                 {
                     cout << "Tanggal yang anda masukkan tidak valid" << endl;
+                    cout << "Press any key to continue..." << endl;
+                    cin.ignore();
+                    cin.get();
                     continue;
                 }
             }
-
-            bulan_transaksi = bulan;
-            // updateBulanTransaksi(recAnggota, nik, bulan);
 
             // cari anggota dalam database
             for (int i = 0; i < recAnggota.size(); i++)
@@ -220,6 +218,7 @@ int main()
                 {
                     while (true)
                     {
+                        system("cls || clear");
                         cout << "Selamat datang " << recAnggota[i].getNama() << endl;
                         cout << "1. Setor simpanan wajib" << endl;
                         cout << "2. Setor simpanan sukarela" << endl;
@@ -237,6 +236,9 @@ int main()
                             if (bulan_transaksi == bulan)
                             {
                                 cout << "Anda sudah membayar simpanan wajib bulan ini" << endl;
+                                cout << "Press any key to continue..." << endl;
+                                cin.ignore();
+                                cin.get();
                                 break;
                             }
 
@@ -250,20 +252,30 @@ int main()
                                 int saldo_dipotong = 25000;
 
                                 recAnggota[i].setSaldo(recAnggota[i].getSaldo() - saldo_dipotong);
+                                saveAnggotaToDatabase(recAnggota);
+
                                 saldo_koperasi += saldo_dipotong;
                                 simpanan_wajib += saldo_dipotong;
 
                                 Transaksi transaksi(JenisTransaksi[0], nik, tanggal, bulan, tahun, saldo_dipotong);
                                 recTransaksi.push_back(transaksi);
-
-                                cout << "Simpanan wajib bulan " << bulan << " berhasil dibayar" << endl;
+                                
+                                bulan_transaksi = bulan;
+                                saveLaporanTransaksiToDatabase(recTransaksi);
+                                cout << "Simpanan wajib bulan " << bulan_transaksi << " berhasil dibayar" << endl;
+                                cout << "Press any key to continue..." << endl;
+                                cin.ignore();
+                                cin.get();
                             }
                             else
                             {
                                 cout << "Simpanan wajib bulan " << bulan << " tidak dibayar" << endl;
+                                cout << "Press any key to continue..." << endl;
+                                cin.ignore();
+                                cin.get();
                                 break;
                             }
-                            saveLaporanTransaksiToDatabase(recTransaksi);
+                            
                             break;
                         case 2:
                             cout << "Masukkan jumlah setoran sukarela: ";
@@ -272,20 +284,27 @@ int main()
                             if (saldo > recAnggota[i].getSaldo())
                             {
                                 cout << "Saldo anda tidak mencukupi" << endl;
+                                cout << "Press any key to continue..." << endl;
+                                cin.ignore();
+                                cin.get();
                                 break;
                             }
                             else
                             {
                                 recAnggota[i].setSaldo(recAnggota[i].getSaldo() - saldo);
+                                saveAnggotaToDatabase(recAnggota);
                                 saldo_koperasi += saldo;
                                 simpanan_sukarela += saldo;
 
                                 Transaksi transaksi(JenisTransaksi[1], nik, tanggal, bulan, tahun, saldo);
                                 recTransaksi.push_back(transaksi);
-
+                                
+                                saveLaporanTransaksiToDatabase(recTransaksi);
                                 cout << "Setoran sukarela sebesar " << saldo << " berhasil dibayarkan" << endl;
+                                cout << "Press any key to continue..." << endl;
+                                cin.ignore();
+                                cin.get();
                             }
-                            saveLaporanTransaksiToDatabase(recTransaksi);
                             break;
                         case 3:
                             cout << "Masukkan jumlah pinjaman: ";
@@ -294,23 +313,29 @@ int main()
                             if (saldo_koperasi < saldo_pinjam)
                             {
                                 cout << "Saldo koperasi tidak mencukupi" << endl;
+                                cout << "Press any key to continue..." << endl;
+                                cin.ignore();
+                                cin.get();
                                 break;
                             }
                             else
                             {
-
                                 recAnggota[i].setSaldo(recAnggota[i].getSaldo() + saldo_pinjam);
                                 recAnggota[i].setSaldoDipinjam(recAnggota[i].getSaldoDipinjam() + saldo_pinjam);
+                                saveAnggotaToDatabase(recAnggota);
                                 saldo_koperasi -= saldo_pinjam;
                                 pinjaman += saldo_pinjam;
 
                                 Transaksi transaksi(JenisTransaksi[2], nik, tanggal, bulan, tahun, saldo);
                                 recTransaksi.push_back(transaksi);
 
+                                saveLaporanTransaksiToDatabase(recTransaksi);
                                 cout << "Pinjaman sebesar " << saldo_pinjam << " berhasil" << endl;
                                 cout << "Pengembalian dilakukan 4 kali angsuran masing-masing sebesar " << (saldo_pinjam + bunga) / 4 << endl;
+                                cout << "Press any key to continue..." << endl;
+                                cin.ignore();
+                                cin.get();
                             }
-                            saveLaporanTransaksiToDatabase(recTransaksi);
                             break;
                         case 4:
                             cout << "Apakah anda ingin membayar untuk bulan " << bulan << " sebesar Rp. " << (saldo_pinjam + bunga) / 4 << " (y/n) ";
@@ -323,28 +348,38 @@ int main()
 
                                 recAnggota[i].setSaldo(recAnggota[i].getSaldo() - saldo_dipotong);
                                 recAnggota[i].setSaldoDipinjam(recAnggota[i].getSaldoDipinjam() - saldo_dipotong);
+                                saveAnggotaToDatabase(recAnggota);
                                 saldo_koperasi += saldo_dipotong;
                                 pengembalian_pinjaman += saldo_dipotong;
 
                                 Transaksi transaksi(JenisTransaksi[3], nik, tanggal, bulan, tahun, saldo_dipotong);
                                 recTransaksi.push_back(transaksi);
 
+                                saveLaporanTransaksiToDatabase(recTransaksi);
                                 cout << "Pengembalian pinjaman bulan " << bulan << " berhasil dibayar" << endl;
+                                cout << "Press any key to continue..." << endl;
+                                cin.ignore();
+                                cin.get();
                             }
                             else
                             {
                                 cout << "Pengembalian pinjaman bulan " << bulan << " tidak dibayar" << endl;
+                                cout << "Press any key to continue..." << endl;
+                                cin.ignore();
+                                cin.get();
                                 break;
                             }
-                            saveLaporanTransaksiToDatabase(recTransaksi);
                             break;
                         case 5:
                             cout << "Saldo anda                 : " << recAnggota[i].getSaldo() << endl;
                             cout << "Saldo dipinjam             : " << recAnggota[i].getSaldoDipinjam() << endl;
                             cout << "Saldo belum dikembalikan   : " << recAnggota[i].getSaldo() - recAnggota[i].getSaldoDipinjam() << endl;
-
+                            cout << "Press any key to continue..." << endl;
+                            cin.ignore();
+                            cin.get();
                             break;
                         case 6:
+                            bulan_transaksi = 0;
                             break;
                         default:
                             break;
@@ -355,13 +390,20 @@ int main()
                 else
                 {
                     cout << "Anggota tidak ditemukan" << endl;
+                    cout << "Press any key to continue..." << endl;
+                    cin.ignore();
+                    cin.get();
                     break;
                 }
+                break;
             }
             break;
         case 3:
             system("cls || clear");
             displayTransaksi(recTransaksi);
+            cout << "Press any key to continue..." << endl;
+            cin.ignore();
+            cin.get();
             break;
         case 4:
             system("cls || clear");
@@ -371,8 +413,10 @@ int main()
             cout << "Total pinjaman              : " << pinjaman << endl;
             cout << "Total pengembalian pinjaman : " << pengembalian_pinjaman << endl;
             cout << "Saldo koperasi              : " << saldo_koperasi << endl;
-            cout << "SHU                         : " << shu << endl;
-
+            cout << "SHU                         : " << shu << endl; //shu belum diset
+            cout << "Press any key to continue..." << endl;
+            cin.ignore();
+            cin.get();
             break;
         case 5:
             cout << "Terima kasih telah menggunakan Sistem Koperasi Simpan Pinjam Alpro Sejahtera" << endl;

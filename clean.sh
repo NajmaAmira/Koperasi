@@ -1,3 +1,3 @@
 #!/bin/bash
 
-rm -rf main *.o
+rm -rf main
